@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПІЗДЄЦЬ: Рольова гра (SRD)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Major+Mono+Display&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-yellow: #FBBF24;
+            --main-dark: #0a0a0a;
+            --dark-gray: #111827;
+            --mid-gray: #374151;
+            --light-gray: #d1d5db;
+            --brutal-shadow: 4px 4px 0px #000;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Courier Prime', monospace;
+            background-color: var(--main-dark);
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39tbW1+fn5oaGhxcXGn_B9dAAAAQUlEQVR42uzMSGcAMQhDQW3//zfYAFOWXsgL/zBOSdI0T9IeLgV203bGSJgDYCHvKzbPZ3wAc8F91VScAn4/B2geLgV203bGSJgDYCHvKzbPZ3wAc8F91VScAn4/B2geLgV203bGSJgDYCHvKzbPZ3wAc8F91VScAn4/B2geLgV203bGSJgDYCHvKzbPZ3wAc8F91VScAn4/B2geLgV203bGSJgDYCHvKzbPZ3wAc8F91VScAn4/B2geLgV203bGSJgDYCHvKzbPZ3wAc8F91VScAn4/B2h_uAINECfgYAAAAASUVORK5CYII=');
+            color: var(--light-gray);
+            text-shadow: 1px 1px 1px #000; /* Покращує читабельність на фоні */
+        }
+
+        [x-cloak] { display: none !important; }
+
+        /* --- Основні контейнери --- */
+        aside {
+            box-shadow: var(--brutal-shadow);
+            border-right: 4px solid #000;
+        }
+        main {
+            transform: rotate(-0.2deg);
+        }
+
+        /* --- Типографіка --- */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Major Mono Display', monospace;
+            text-shadow: 0 0 2px var(--main-yellow), 0 0 5px rgba(251, 191, 36, 0.3);
+        }
+        h1 { color: var(--main-yellow); }
+        h2, h3, h4 { color: white; }
+        strong { color: var(--main-yellow); }
+
+        /* --- Навігація --- */
+        nav a {
+            transition: all 0.15s ease-in-out;
+            border: 2px solid transparent;
+        }
+        nav a:hover {
+            color: var(--main-yellow);
+            background-color: var(--dark-gray);
+            transform: translateX(5px);
+        }
+        nav a:hover::before {
+            content: '> ';
+        }
+        .active-nav {
+            color: var(--main-yellow);
+            background-color: var(--dark-gray);
+        }
+        .active-nav::before {
+            content: '> ';
+        }
+
+        /* --- Блоки та розділювачі --- */
+        hr {
+            border: none;
+            height: 3px;
+            background: var(--mid-gray);
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+        }
+        blockquote {
+            border: 2px solid var(--mid-gray);
+            border-left: 6px solid var(--main-yellow);
+            background-color: var(--dark-gray);
+            box-shadow: var(--brutal-shadow);
+            transform: rotate(-1deg);
+        }
+
+        /* --- Інтерактивні акордеони (Архетипи) --- */
+        details {
+            background-color: var(--dark-gray);
+            border: 2px solid var(--mid-gray);
+            box-shadow: var(--brutal-shadow);
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+            transform: rotate(0.4deg);
+        }
+        details[open] {
+            border-color: var(--main-yellow);
+        }
+        summary {
+            cursor: pointer;
+            padding: 0.75rem 1rem;
+            font-weight: 700;
+            color: var(--main-yellow);
+            transition: background-color 0.2s;
+        }
+        summary:hover {
+            background-color: rgba(251, 191, 36, 0.1);
+        }
+        summary::after {
+            content: '[+]';
+            float: right;
+            font-family: 'Courier Prime', monospace;
+        }
+        details[open] summary::after {
+            content: '[-]';
+        }
+        .details-content {
+            padding: 0 1rem 1rem 1rem;
+            border-top: 2px solid var(--mid-gray);
+            margin-top: 0.5rem;
+        }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+
+        /* --- Таблиці --- */
+        table {
+            border-collapse: collapse;
+            box-shadow: var(--brutal-shadow);
+            transform: rotate(-0.5deg);
+            width: 100%;
+        }
+        th, td {
+            border: 2px solid var(--mid-gray);
+            padding: 0.75rem;
+        }
+        thead {
+            background-color: var(--dark-gray);
+            color: var(--main-yellow);
+            border-bottom: 3px solid var(--main-yellow);
+        }
+
+        /* --- СТИЛІ ДЛЯ ЛИСТА ПЕРСОНАЖА --- */
+        #arkush-personazha-wrapper { background: #fdfdfd; padding: 1.5rem; border: 2px solid black; box-shadow: var(--brutal-shadow); color: black; text-shadow: none; transform: rotate(-1deg); }
+        #arkush-personazha-wrapper h3, #arkush-personazha-wrapper h4 { color: black; text-shadow: none; }
+        #arkush-personazha-wrapper .arkush-header { font-family: 'Major Mono Display', monospace; }
+        #arkush-personazha-wrapper input[type="text"], #arkush-personazha-wrapper input[type="number"], #arkush-personazha-wrapper textarea { background: transparent; border: none; border-bottom: 2px solid #9ca3af; width: 100%; padding: 4px 2px; font-family: 'Courier Prime', monospace; font-size: 1rem; }
+        #arkush-personazha-wrapper input:focus, #arkush-personazha-wrapper textarea:focus { outline: none; border-bottom-color: black; }
+        #arkush-personazha-wrapper textarea { resize: vertical; line-height: 1.6; }
+        #arkush-personazha-wrapper label { font-family: 'Major Mono Display', monospace; display: block; margin-bottom: 2px; font-size: 0.9rem; }
+        
+        /* Інтерактивні трекери */
+        .tracker-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+        .tracker-box { cursor: pointer; width: 100%; aspect-ratio: 1 / 1; border: 2px solid #4b5563; transition: all 0.1s; }
+        .tracker-box.ticked { background-color: black; border-color: black; }
+        
+        .print-button { background-color: var(--main-yellow); color: var(--dark-gray); font-family: 'Major Mono Display', monospace; padding: 0.5rem 1rem; text-shadow: none; border: 2px solid black; box-shadow: var(--brutal-shadow); cursor: pointer; transition: all 0.1s; display: inline-block; }
+        .print-button:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
+
+        @media print {
+            body, header, nav, aside, .print-button-wrapper { display: none !important; visibility: hidden !important; }
+            main, #arkush-section, #arkush-personazha-wrapper, #arkush-personazha-wrapper * { visibility: visible !important; }
+            #arkush-personazha-wrapper { position: absolute; left: 0; top: 0; width: 100%; border: none !important; box-shadow: none !important; transform: none !important; padding: 0; }
+            body { background: white !important; }
+            #arkush-personazha-wrapper input, #arkush-personazha-wrapper textarea { border-bottom-style: solid !important; }
+            .tracker-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <div x-data="{ activeTab: 'rozdil-0' }" class="flex flex-col md:flex-row min-h-screen">
+        <aside class="w-full md:w-72 bg-black text-white flex-shrink-0 border-b-4 md:border-b-0 border-black">
+            <div class="p-5 border-b-2 border-gray-800">
+                <h1 class="text-4xl">ПІЗДЄЦЬ</h1>
+                <p class="text-sm text-gray-500 tracking-widest">System Reference Document</p>
+            </div>
+            <nav class="p-3">
+                <ul class="space-y-1">
+                    <li><a href="#" @click.prevent="activeTab = 'rozdil-0'" :class="{ 'active-nav': activeTab === 'rozdil-0'}" class="block w-full text-left px-4 py-2 font-semibold">Розділ 0: Вступ</a></li>
+                    <li><a href="#" @click.prevent="activeTab = 'rozdil-1'" :class="{ 'active-nav': activeTab === 'rozdil-1'}" class="block w-full text-left px-4 py-2 font-semibold">Розділ 1: Основи Гри</a></li>
+                    <li><a href="#" @click.prevent="activeTab = 'rozdil-2'" :class="{ 'active-nav': activeTab === 'rozdil-2'}" class="block w-full text-left px-4 py-2 font-semibold">Розділ 2: Створення Персонажа</a></li>
+                    <li><a href="#" @click.prevent="activeTab = 'rozdil-3'" :class="{ 'active-nav': activeTab === 'rozdil-3'}" class="block w-full text-left px-4 py-2 font-semibold">Розділ 3: Правила Гри</a></li>
+                    <li><a href="#" @click.prevent="activeTab = 'rozdil-4'" :class="{ 'active-nav': activeTab === 'rozdil-4'}" class="block w-full text-left px-4 py-2 font-semibold">Розділ 4: "Магія"</a></li>
+                    <li><a href="#" @click.prevent="activeTab = 'rozdil-5'" :class="{ 'active-nav': activeTab === 'rozdil-5'}" class="block w-full text-left px-4 py-2 font-semibold">Розділ 5: Інструменти Майстра</a></li>
+                    <li><a href="#" @click.prevent="activeTab = 'rozdil-6'" :class="{ 'active-nav': activeTab === 'rozdil-6'}" class="block w-full text-left px-4 py-2 font-semibold">Розділ 6: Додатки</a></li>
+                    <li><a href="#" @click.prevent="activeTab = 'rozdil-7'" :class="{ 'active-nav': activeTab === 'rozdil-7'}" class="block w-full text-left px-4 py-2 font-semibold">Розділ 7: Лист Персонажа</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 lg:p-10 overflow-y-auto bg-gray-900/80">
+        <section x-show="activeTab === 'rozdil-0'" x-cloak>
+            <h2 class="text-4xl font-bold mb-6 border-b-2 border-gray-700 pb-2">РОЗДІЛ 0: ВСТУП, АБО ЛАСКАВО ПРОСИМО В ПИЗДЕЦЬ</h2>
+            <p class="mb-4 leading-relaxed text-lg">Ти прокидаєшся. Не тому, що виспався, а тому, що сусід згори знову впустив щось важке. За вікном — сіре небо, що тисне на сірі панельки. Повітря пахне вчорашнім дощем і сьогоднішньою безнадією. Це не ранок нового дня. Це черговий дубль в п'єсі, сценарій якої ти давно забув. На кухні чекає холодна кава і невирішене питання: "Нахуя?".</p>
+            <p class="mb-4 leading-relaxed text-lg">Ласкаво просимо в <strong>"ПІЗДЄЦЬ"</strong>.</p>
+            <h3 class="text-2xl mt-8 mb-4">0.1. Про що ця гра?</h3>
+            <p>"ПІЗДЄЦЬ" — гра не про те, як стати героєм. Це гра про те, як залишитись людиною, коли все навколо натякає, що це — марна трата часу. Це інструмент для створення історій про маленьких людей, що намагаються знайти сенс (або хоча б не з'їхати з глузду) у великому, байдужому світі, який застиг у часі десь на околицях типового спального району.</p>
+            <blockquote class="p-4 my-6 italic text-gray-400">
+                Щоб вижити тут, треба знати місцеві правила:
+            </blockquote>
+            <ul class="list-none space-y-3 pl-4">
+                <li><strong>Поразка — це не кінець, а зав'язка.</strong> Найцікавіші моменти трапляються тоді, коли все йде через сраку. Ваша мета — не уникнути поразки, а зробити її незабутньою.</li>
+                <li><strong>Чорний гумор — це кисень.</strong> Здатність сміятися з жаху, абсурду і власної нікчемності — єдиний спосіб не потонути в цьому болоті.</li>
+                <li><strong>Правила — це лише рекомендації.</strong> Головне — це атмосфера і спільне створення історії. Якщо правило заважає зробити гру більш смішною чи трагічною, посилайте його нахуй.</li>
+            </ul>
+            <hr class="my-8">
+            <h3 class="text-2xl mt-8 mb-4">0.2. Слово до Гравців (ПГ)</h3>
+            <p>Вітаю, дійова особо. Твій персонаж, скоріш за все, помре. Або зіп'ється. Або збожеволіє. Не сприймай це як поразку. Сприймай це як неминучий фінал п'єси.</p>
+            <p>Твоє завдання — не перемогти. Твоє завдання — залишити після себе красивий шрам на обличчі цього світу. Відчайдушно борись за свою абсурдну мету, встрявай у безнадійні бійки, веди глибокі філософські бесіди з гопниками, шукай істину на дні пляшки. І пам'ятай: чим гірше для твого персонажа, тим краще для історії.</p>
+            <h3 class="text-2xl mt-8 mb-4">0.3. Слово до Майстра (ГМ)</h3>
+            <p>Ти — режисер цього театру абсурду. Ти не бог з машини. Ти — сама машина. Іржава, гучна і непередбачувана. Твоя роль — зробити світ живим, реагуючим і безжалісно байдужим.</p>
+            <ul class="list-disc list-inside space-y-2 pl-4">
+                <li>Будь справедливим, але не добрим. Якщо гравець робить дурницю, наслідки мають бути відповідними.</li>
+                <li>Слухай гравців. Найкращі ідеї народжуються з їхніх дій. Імпровізуй.</li>
+                <li>Наповнюй світ деталями. Запах сирості в під'їзді, звук шансону з розбитого "Ланосу", фрази, почуті в черзі.</li>
+                <li>Використовуй "Шкалу Абсурду". Заохочуй креативний хаос і карай за нудні рішення.</li>
+            </ul>
+            <h3 class="text-2xl mt-8 mb-4">0.4. Абсурдна ліцензія або Правила використання</h3>
+            <p>Цей документ є спільним надбанням усіх стражденних.</p>
+            <ol class="list-decimal list-inside space-y-2 pl-4">
+                <li>Ти можеш вільно копіювати, роздруковувати і ділитися цим талмудом.</li>
+                <li>Ти повинен розуміти, що це лише каркас. Створюй на його основі свої пригоди, класи і рецепти самогону.</li>
+                <li>Буде добре, якщо, створюючи щось своє, ти згадаєш добрим словом автора цього документу.</li>
+                <li>Я не несу відповідальності за втрачені години сну, дружні стосунки та остаточно втрачену віру в людство.</li>
+                <li>Щодо комерційного використання: Якщо ти примудришся на цьому заробити, то напиши мені - я куплю тобі пива.</li>
+            </ol>
+        </section>
+        
+        <section x-show="activeTab === 'rozdil-1'" x-cloak>
+            <h2 class="text-4xl font-bold mb-6 border-b-2 border-gray-700 pb-2">РОЗДІЛ 1: ОСНОВИ ГРИ</h2>
+            <h3 class="text-2xl mt-6 mb-3">1.1. Ключові Концепції</h3>
+            <p class="mb-4 leading-relaxed">Перед тим як поринути в безодню, варто зрозуміти кілька базових речей, на яких тримається цей світ.</p>
+            <ul class="list-disc list-inside space-y-2 pl-4">
+                <li><strong>Майстер (ГМ):</strong> Це оповідач, арбітр і творець неминучої долі. Він описує світ, грає за ворогів, сусідів, чиновників та іншу біомасу. Його слово — закон, але і він підкоряється головному закону — закону жанру.</li>
+                <li><strong>Гравці (ПГ):</strong> Це ви. Ви граєте за своїх нещасних персонажів — дійових осіб, що ще не втратили здатності страждати і чинити опір ентропії. Ви вирішуєте, що вони кажуть і роблять.</li>
+                <li><strong>Кубик d20:</strong> Головний інструмент для вирішення долі. Він використовується для проходження більшості перевірок. Його випадок вирішує, чи увінчається ваша геніальна ідея успіхом, чи ганебним провалом.</li>
+            </ul>
+            <h3 class="text-2xl mt-8 mb-3">1.2. Очки Зайобаності (ОЗБ)</h3>
+            <p class="mb-4 leading-relaxed">Це найважливіший ресурс вашого персонажа, важливіший за гроші і навіть за здоров'я. ОЗБ — це ваш ментальний ресурс, який показує, скільки у вас залишилось сил терпіти цей світ, перш ніж ваш дах остаточно поїде.</p>
+            <p class="mb-2 leading-relaxed"><strong>Втрата ОЗБ:</strong> Ви втрачаєте ОЗБ, коли стикаєтесь з реальністю в її найгірших проявах: бюрократією, хамством в громадському транспорті, тупістю оточуючих. Майстер повідомляє, коли ситуація настільки нестерпна, що ви втрачаєте 1 або більше ОЗБ.</p>
+            <p class="mb-2 leading-relaxed"><strong>Витрата ОЗБ:</strong> Це ваш головний інструмент опору. Ви можете свідомо і добровільно витратити 1 ОЗБ, щоб:</p>
+            <ul class="list-disc list-inside space-y-2 pl-8">
+                <li>Автоматично пройти будь-яку перевірку на опір соціальному чи психологічному тиску.</li>
+                <li>Сказати те, що ви насправді думаєте, попри будь-які наслідки.</li>
+                <li>Знайти в собі сили встати зранку з важкого похмілля і піти рятувати світ.</li>
+            </ul>
+            <h4 class="text-xl mt-6 mb-3">1.3. Дрібні радощі Життя (Відновлення ОЗБ)</h4>
+            <p class="mb-4 leading-relaxed">Раз на ігрову сесію персонаж може відновити 1 ОЗБ, якщо він знайде час і можливість для однієї з таких дій: випити холодне пиво, послухати стару пісню, вдало пожартувати, з'їсти біляш на вокзалі, допомогти комусь безкорисливо, або побачити, як ворог страждає від бюрократії.</p>
+            <h3 class="text-2xl mt-8 mb-3">1.4. Шкала Абсурду</h3>
+            <p class="mb-4 leading-relaxed">Головний інструмент для Майстра. Кожен район має власну Шкалу Абсурду (від 0 до 10). На початку гри вона стоїть на 5. Дії гравців можуть її підвищувати (креативний хаос) або знижувати (нудьга і поразка). Критичні рівні (7+ або 3-) викликають випадкові події з відповідних таблиць.</p>
+        </section>        
+
+<section x-show="activeTab === 'rozdil-2'" x-cloak>
+            <h2 class="text-4xl font-bold mb-6 border-b-2 border-gray-700 pb-2">РОЗДІЛ 2: СТВОРЕННЯ ПЕРСОНАЖА</h2>
+            <p class="mb-4 leading-relaxed">Твій персонаж – це набір недоліків, дивних звичок і одна велика трагедія, що рухає його вперед.</p>
+            <h3 class="text-2xl mt-6 mb-3">2.1. Здібності та Показники</h3>
+            <ul class="list-disc list-inside space-y-2 mb-4">
+                <li><strong>Здібності (3d6 для кожної):</strong> СИЛА, СПРИТНІСТЬ, ВИТРИВАЛІСТЬ, ХАРИЗМА.</li>
+                <li><strong>Очки Здоров'я (ОЗ):</strong> Витривалість + d8.</li>
+                <li><strong>Очки Зайобаності (ОЗБ):</strong> Харизма + d8.</li>
+            </ul>
+            <h3 class="text-2xl mt-6 mb-3">2.2. Трагедія та Звичка</h3>
+            <p class="mb-2 leading-relaxed"><strong>Визначте свою Трагедію (d8):</strong></p>
+            <ol class="list-decimal list-inside space-y-1 pl-4 text-gray-400">
+                <li>Шукаєш, хто спиздив твій велосипед "Україна".</li>
+                <li>Намагаєшся повернути жінку, яка пішла до водія маршрутки.</li>
+                <li>Хочеш довести сусідам, що ти не верблюд.</li>
+                <li>Збираєш гроші на поїздку в Карпати. Вже 15 років.</li>
+                <li>Тебе переслідує привид Степана Бандери і питає, що ти зробив для України.</li>
+                <li>Мрієш відкрити ларьок з шаурмою, але тобі постійно щось заважає.</li>
+                <li>Пропив свою долю. Тепер шукаєш її по ломбардах.</li>
+                <li>Тобі відома Велика Таємниця, але ти її забув з похмілля.</li>
+            </ol>
+            <p class="mt-4 mb-2 leading-relaxed"><strong>Визначте свою Шкідливу звичку (d6):</strong></p>
+            <ol class="list-decimal list-inside space-y-1 pl-4 text-gray-400">
+                <li>Лузгати насіння. Завжди і всюди.</li>
+                <li>Говорити сам з собою. Іноді сперечатись.</li>
+                <li>Постійно позичати гроші "до завтра".</li>
+                <li>Розповідати несмішні анекдоти.</li>
+                <li>Колекціонувати кришечки від пива.</li>
+                <li>Вірити у все, що кажуть по телевізору.</li>
+            </ol>
+            <h3 class="text-2xl mt-8 mb-3">2.3. Архетипи (Хто ти по жизні)</h3>
+            <div class="space-y-4">
+                <details>
+                    <summary>Інтелігент</summary>
+                    <div class="details-content">
+                        <p class="mb-2 italic text-gray-400">Він читав Канта, але запиває його портвейном. Він бачить всю глибину світового піздєця, і ця мудрість робить його нестерпним.</p>
+                        <p><strong>Здатність:</strong> Витратьте 1 ОЗБ, щоб почати нудний монолог, що вводить опонента в ступор (Перевірка Харизми РС 14).</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>Відьма</summary>
+                    <div class="details-content">
+                        <p class="mb-2 italic text-gray-400">Вона бачить знаки в тріщинах на асфальті, майбутнє в кавовій гущі. Люди її бояться, але приходять просити про допомогу.</p>
+                        <p><strong>Здатність:</strong> Раз на день може зварити зілля з підніжного корму. Гравець має описати ритуал. Ефект визначає Майстер.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>Пацан з району</summary>
+                    <div class="details-content">
+                        <p class="mb-2 italic text-gray-400">Його територія — цей двір, його уніформа — спортивний костюм. Він живе за кодексом вулиці, де є "свої" і "чужі".</p>
+                        <p><strong>Здатність "Є подзвонить?":</strong> Раз на день може "кинути клич". При успіху (d6=5-6) на допомогу приходять d4 пацанів.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>Далекобійник</summary>
+                    <div class="details-content">
+                        <p class="mb-2 italic text-gray-400">Він бачив всю країну через лобове скло своєї фури. Для нього дім — це кабіна, що пахне дизелем і дешевою кавою.</p>
+                        <p><strong>Здатність "Дорожня мудрість":</strong> Раз на день може заявити, що він "вже бував у схожій ситуації", і отримати корисну інформацію від Майстра.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>Ділок</summary>
+                    <div class="details-content">
+                        <p class="mb-2 italic text-gray-400">Він — людина-телефон. Він знає людей, які знають людей. Його бізнес — це інформація і зв'язки.</p>
+                        <p><strong>Здатність "Є один варіант...":</strong> Раз на сесію може спробувати дістати будь-який предмет або інформацію (Перевірка Харизми), але завжди є побічний ефект.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>Лікар</summary>
+                    <div class="details-content">
+                        <p class="mb-2 italic text-gray-400">Від нього тхне спиртом і цинізмом, але його руки ще пам'ятають, як врятувати життя за допомогою скотчу і міцного слова.</p>
+                        <p><strong>Здатність "І так сойдьот!":</strong> Може спробувати стабілізувати персонажа при смерті, використовуючи підручні матеріали (Перевірка Спритності РС 14).</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+        
+        <section x-show="activeTab === 'rozdil-3'" x-cloak>
+            <h2 class="text-4xl font-bold mb-6 border-b-2 border-gray-700 pb-2">РОЗДІЛ 3: ПРАВИЛА ГРИ</h2>
+        
+            <h3 class="text-2xl mt-6 mb-3">3.1. Перевірки та Рівні Складності (РС)</h3>
+            <p class="mb-4 leading-relaxed">Коли ти робиш щось ризиковане, результат чого не є очевидним, ти робиш перевірку: <strong>кидаєш d20 + модифікатор здібності</strong>. Результат має бути рівним або вищим за Рівень Складності (РС), встановлений Майстром (12 - нормально, 14 - складно, 16 - дуже складно, 18 - майже неможливо).</p>
+            
+            <hr class="my-8">
+        
+            <h3 class="text-2xl mt-8 mb-3">3.2. Фізичний конфлікт (Махач)</h3>
+            <p class="mb-4 leading-relaxed">Бійка — це швидкий і простий процес, що вирішується через протиставні кидки.</p>
+            <ul class="list-disc list-inside space-y-2 pl-4">
+                <li><strong>Ініціатива:</strong> Кидок d6. 1-3 — першими діють вороги; 4-6 — гравці.</li>
+                <li><strong>Атака та Захист:</strong>
+                    <ol class="list-decimal list-inside pl-6 mt-2">
+                        <li>Атакуючий робить кидок атаки (d20 + мод. <strong>Сили</strong> або <strong>Спритності</strong>).</li>
+                        <li>Результат атаки стає РС для захисту.</li>
+                        <li>Захисник робить кидок ухилення (d20 + мод. </strong>Спритності</strong> Якщо результат дорівнює або перевищує РС, він ухилився.</li>
+                    </ol>
+                </li>
+                 <li><strong>Крити та Провали (20 та 1):</strong> Працюють як зазвичай, призводячи до подвійної шкоди або несподіваних катастроф.</li>
+            </ul>
+            
+            <hr class="my-8">
+        
+            <h3 class="text-2xl mt-8 mb-3">3.3. Соціальний конфлікт (Перепалка)</h3>
+            <p class="mb-4 leading-relaxed">Це правила для суперечок, торгів, допитів та бюрократичних баталій. Мета — зламати волю опонента, а не його тіло.</p>
+            <ul class="list-disc list-inside space-y-2 pl-4">
+                <li><strong>Ресурси конфлікту:</trong> Гравці ризикують своїми </strong>Очками Зайобаності (ОЗБ</strong> НПЦ ризикують своєю <strong>Мораллю</strong>li>
+                <li><strong>Механіка "Тиску":</strong>
+                    <ol class="list-decimal list-inside pl-6 mt-2">
+                        <li>Гравець, що "тисне" на опонента (сперечається, погрожує, торгується), робить кидок <strong>d20 + модифікатор Харизми</strong>.</li>
+                        <li>Опонент робить протиставний кидок: <strong>d20 + мод. Харизми</strong> (якщо гравець) або просто <strong>d20</strong> (якщо НПЦ).</li>
+                    </ol>
+                </li>
+                <li><strong>Наслідки:</strong>
+                    <ul class="list-circle list-inside pl-6 mt-2">
+                        <li>Якщо гравець <strong>переміг</strong>, опонент-NPC втрачає <strong>2 Моралі </strong>, а опонент-гравець — <strong>1 ОЗБ</strong>.</li>
+                        <li>Якщо гравець <strong>програв</strong>, він сам виснажився від спроби і втрачає <strong>1 ОЗБ</strong>.</li>
+                    </ul>
+                </li>
+                <li><strong>Перемога та Поразка:</strong> Коли Мораль NPC падає до 0, він ламається і поступається. Коли ОЗБ гравця падає до 0, він програє суперечку і отримує наслідки з відповідної таблиці.</li>
+            </ul>
+            
+            <hr class="my-8">
+        
+            <h3 class="text-2xl mt-8 mb-3">3.4. Наслідки</h3>
+            <h4 class="text-xl mt-4 mb-2">Коли Очки Здоров'я = 0</h4>
+            <p>Киньте d4: 1 — непритомність; 2 — каліцтво; 3 — кровотеча; 4 — труп.</p>
+            <h4 class="text-xl mt-4 mb-2">Коли Очки Зайобаності = 0</h4>
+            <p>Киньте d6: 1 — запій; 2 — ступор; 3 — паранойя; 4 — агресія; 5 — нова трагедія; 6 — просвітлення.</p>
+        </section>
+
+       <section x-show="activeTab === 'rozdil-4'" x-cloak>
+            <h2 class="text-4xl font-bold mb-6 border-b-2 border-gray-700 pb-2">РОЗДІЛ 4: ЧУДЕСА ТА ЄБАНІНА (МАГІЯ)</h2>
+            <h3 class="text-2xl mt-6 mb-3">4.1. Концепція</h3>
+            <p class="mb-4 leading-relaxed">"Прозріння" — це моменти, коли персонаж настільки глибоко занурюється у тканину абсурдної реальності, що може на мить смикнути за потрібну ниточку. Будь-який персонаж може спробувати це зробити, але ціна завжди висока.</p>
+            <h3 class="text-2xl mt-8 mb-3">4.2. Правила Прозрінь</h3>
+            <h4 class="text-xl mt-6 mb-3">Ціна та Активація</h4>
+            <ul class="list-disc list-inside space-y-3 pl-4">
+                <li><strong>Плата за спробу:</strong> Щоб спробувати активувати Прозріння, гравець повинен <strong>витратити 1 Очко Зайобаності (ОЗБ)</strong>. Це очко втрачається незалежно від успіху кидка.</li>
+                <li><strong>Перевірка активації:</strong> Після сплати ціни, гравець робить перевірку <strong>Харизми</strong> проти <strong>РС 12</strong>.</li>
+                <li><strong>Критичне Прозріння (Натуральне 20):</strong> Якщо на d20 випадає 20, Прозріння спрацьовує з посиленим ефектом. Киньте d6 за таблицею нижче. ОЗБ за цю спробу <strong>не витрачається</strong>.</li>
+            </ul>
+             <p class="mt-4 text-gray-400 italic">Примітка: унікальні здібності архетипів, як-от "Зварити зілля" у Відьми, не є Прозріннями і не вимагають витрати ОЗБ, якщо це не вказано в їхньому описі.</p>
+            <h3 class="text-2xl mt-8 mb-3">4.3. Таблиця Критичного Успіху Прозріння (d6)</h3>
+            <table>
+                <thead><tr><th>d6</th><th>Результат</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td><strong>Колективне несвідоме:</strong> Ефект поширюється не тільки на ціль, але й на d4 випадкових істот навколо.</td></tr>
+                    <tr><td>2</td><td><strong>Тріщина в реальності:</strong> Прозріння настільки потужне, що сама реальність реагує. Асфальт зітхає, ліхтарний стовп плаче іржею.</td></tr>
+                    <tr><td>3</td><td><strong>Ідеальне виконання:</strong> Ефект спрацьовує бездоганно. Ви настільки задоволені собою, що відновлюєте 1 ОЗБ.</td></tr>
+                    <tr><td>4</td><td><strong>Перманентний слід:</strong> Ефект стає постійним, але з дивацтвом. Тарган Семен вирішує залишитись з вами.</td></tr>
+                    <tr><td>5</td><td><strong>Джерело Сили:</strong> Ви розумієте фундаментальний принцип, що лежить в основі Прозріння. Отримайте перевагу (+4) на одну майбутню перевірку, пов'язану з цим.</td></tr>
+                    <tr><td>6</td><td><strong>Вибір Майстра: Подвійна Ціна.</strong> Стається щось неймовірно гарне, але й щось настільки ж погане.</td></tr>
+                </tbody>
+            </table>
+            <h3 class="text-2xl mt-8 mb-3">4.4. Список Прозрінь (d10)</h3>
+            <ol class="list-decimal list-inside space-y-2 pl-4 text-gray-400">
+                <li><strong>Заговор на понос:</strong> Ціль повинна пройти перевірку Витривалості (РС 14) або провести наступні d4 раунди в екстрених пошуках туалету.</li>
+                <li><strong>Сила наїбалова:</strong> Ти отримуєш +4 до наступної перевірки на обман або маніпуляцію.</li>
+                <li><strong>Матеріалізація таргана:</strong> Ти створюєш одного великого, сумного і мудрого таргана на ім'я Семен, який може дати одну загадкову пораду.</li>
+                <li><strong>Виклик дільничного:</strong> З нізвідки з'являється втомлений життям міліціонер, який задає всім незручні питання, після чого зникає.</li>
+                <li><strong>Ефект розбитої пляшки:</strong> Ти розказуєш цілі, як насправді влаштований світ. Усі її перевірки проходять з РС 14 на d4 раунди.</li>
+                <li><strong>Благословення Баби Галі:</strong> Ти починаєш сипати добірними народними прокльонами. Ворог повинен пройти перевірку Харизми (РС 12) або втікає в сльозах.</li>
+                <li><strong>Гравітація – це думка буржуазії:</strong> Ти можеш на один раунд ходити по стінах або стелі.</li>
+                <li><strong>Сльози Бюрократа:</strong> Ти починаєш цитувати параграфи з неіснуючих законів. Будь-який чиновник впадає в ступор.</li>
+                <li><strong>Резонанс порожнечі:</strong> Ти стукаєш по порожній пляшці. Всі в радіусі 10 метрів повинні пройти перевірку ОЗБ (РС 12) або втратити 1 Очко Зайобаності.</li>
+                <li><strong>Поетична правда:</strong> Ти на хвилину стаєш геніальним поетом. Всі вірять усьому, що ти кажеш, за умови, що це заримовано.</li>
+            </ol>
+        </section>
+
+        <section x-show="activeTab === 'rozdil-5'" x-cloak>
+            <h2 class="text-4xl font-bold mb-6 border-b-2 border-gray-700 pb-2">РОЗДІЛ 5: ІНСТРУМЕНТИ МАЙСТРА</h2>
+            <h3 class="text-2xl mt-6 mb-3">5.1. Абсурдний бестіарій</h3>
+            <p class="mb-4 leading-relaxed text-gray-400">Вороги в цій грі — це не орки та гобліни. Це породження самої реальності.</p>
+            <div class="space-y-4">
+                <p><strong>Гопник (3-5 особин):</strong> ОЗ: 4, Мораль: 7. Атака: Удар (d4 ОЗ).</p>
+                <p><strong>Сумний мент:</strong> ОЗ: 8, Мораль: 9, Броня: 1. Атака: Кийок (d4 ОЗ).</p>
+                <p><strong>Баба з базару:</strong> ОЗ: 6, Мораль: 10. Атака: Крик (d3 ОЗБ) або Авоська з цеглою (d4 ОЗ).</p>
+                <p><strong>Чиновник:</strong> ОЗ: 10, Мораль: 12. Атака: "Принесіть довідку" (d4 ОЗБ). Не можна атакувати фізично без 3 довідок.</p>
+                <p><strong>Консьєржка:</strong> ОЗ: 5, Мораль: 11. Атака: "А ви до кого?" (Харизма РС 14, щоб пройти).</p>
+            </div>
+            <h4 class="text-xl mt-6 mb-3">Перевірка Моралі (оновлена)</h4>
+            <p class="mb-4 leading-relaxed">Майстер робить перевірку Моралі для групи ворогів, коли падає перший з них, їхній лідер, або половина групи. Киньте <strong>2d6</strong>. Якщо результат **більший** за Мораль ворога, його дух зламано. Замість другого кидка, Майстер обирає результат, що найбільш відповідає **типу ворога**:</p>
+            <ul class="list-disc list-inside space-y-2 pl-4 text-gray-400">
+                <li><strong>Гопники, дрібні злочинці:</strong> Найімовірніше, <strong>втікають</strong>. Найслабший може спробувати </strong>торгуватися</strong>.</li>
+                <li><strong>Сумні менти, охоронці:</strong> <strong>Відступають</strong> для перегрупування або <strong>здаються</strong>, якщо оточені.</li>
+                <li><strong>Чиновники, консьєржки:</strong> <strong>Бюрократична капітуляція"</strong> — починають погрожувати скаргами, поліцією, зв'язками.</li>
+                <li><strong>Фанатики, звірі:</strong> <strong>Тупа лють"</strong> — б'ються до останнього, можливо, з більшою люттю (+1 до шкоди).</li>
+            </ul>
+            <h3 class="text-2xl mt-8 mb-3">5.2. Шмурдяк (Матеріальний світ)</h3>
+            <div class="space-y-8">
+                <div>
+                    <h4 class="text-xl mb-2">Броня</h4>
+                    <table><thead><tr><th>Тип броні</th><th>Поглинання шкоди</th><th>Штрафи</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Легка</strong> (шкірянка, ватник)</td><td>-d2 шкоди</td><td>Немає</td></tr>
+                        <tr><td><strong>Середня</strong> (старий бронежилет)</td><td>-d4 шкоди</td><td>+2 РС до Спритності</td></tr>
+                        <tr><td><strong>Важка</strong> (саморобна)</td><td>-d6 шкоди</td><td>+4 РС до Спритності</td></tr>
+                    </tbody></table>
+                </div>
+                <div>
+                    <h4 class="text-xl mb-2">Зброя та Інструменти</h4>
+                    <table><thead><tr><th>Предмет</th><th>Шкода</th></tr></thead>
+                    <tbody>
+                        <tr><td>Кулак / Нога</td><td>d2</td></tr>
+                        <tr><td>Ніж кухонний / "Розочка"</td><td>d4</td></tr>
+                        <tr><td>Монтіровка / Кийок</td><td>d6</td></tr>
+                        <tr><td>Сокира / Важка палиця</td><td>d8</td></tr>
+                    </tbody></table>
+                </div>
+            </div>
+            <h3 class="text-2xl mt-8 mb-3">5.3. Випадкові події (Шкала Абсурду)</h3>
+            <p class="mb-4">Якщо Шкала Абсурду досягає критичних позначок (7+ або 3-), кидайте 1d6 за відповідною таблицею.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div><h4 class="text-xl mb-3">Абсурд 7+: "Сюрреалістичний зсув"</h4>
+                    <ol class="list-decimal pl-5 text-gray-400"><li>Дивний дощ.</li><li>Предмети говорять.</li><li>Тварина дає пораду.</li><li>Гравітація слабшає.</li><li>Кольори стають яскравішими.</li><li>З'являється фантомний ларьок.</li></ol>
+                </div>
+                <div><h4 class="text-xl mb-3">Абсурд 3-: "Засилля Нудьги"</h4>
+                    <ol class="list-decimal pl-5 text-gray-400"><li>Нова бюрократична вимога.</li><li>Технології працюють гірше.</li><li>Всі втрачають 1 ОЗБ.</li><li>Світ стає сірим.</li><li>Опір будь-яким веселощам.</li><li>З'являється "інспектор".</li></ol>
+                </div>
+            </div>
+             <h3 class="text-2xl mt-8 mb-3">5.4. Каркаси Кампаній</h3>
+            <p>Використовуйте прості зав'язки: знайти зниклого крокодила з каналізації; розгадати таємницю спадку від дядька-дисидента; організувати найкращий у районі концерт на День Незалежності.</p>
+        </section>
+
+        <section x-show="activeTab === 'rozdil-6'" x-cloak>
+            <h2 class="text-4xl font-bold mb-6 border-b-2 border-gray-700 pb-2">РОЗДІЛ 6: ДОДАТКИ ТА ЗАВІСА</h2>
+            <h3 class="text-2xl mt-6 mb-3">6.1. Джерела Натхнення</h3>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div><h4 class="text-xl mb-2">Література</h4><ul class="list-disc list-inside text-gray-400"><li>Лесь Подерв'янський</li><li>Сергій Жадан</li><li>Юрій Андрухович</li><li>Чарльз Буковскі</li></ul></div>
+                <div><h4 class="text-xl mb-2">Кіно</h4><ul class="list-disc list-inside text-gray-400"><li>"Люксембург, Люксембург", "Мої думки тихі"</li><li>"Дике поле"</li><li>Фільми Акі Каурісмякі</li></ul></div>
+                <div><h4 class="text-xl mb-2">Музика</h4><ul class="list-disc list-inside text-gray-400"><li>Брати Гадюкіни</li><li>Воплі Відоплясова (ранні)</li><li>Хамерман Знищує Віруси</li> <li>Пирятин </li> <li>Tom Waits</li></ul></div>
+                <div><h4 class="text-xl mb-2">Ігри</h4><ul class="list-disc list-inside text-gray-400"><li>Disco Elysium</li><li>S.T.A.L.K.E.R.</li><li>Pathologic</li></ul></div>
+            </div>
+            <h3 class="text-2xl mt-8 mb-3">6.2. Подяки</h3>
+            <p class="mb-4">Дякуємо <strong>Лесю Подерв'янському</strong> за мову для опису цього світу, та авторам <strong>MÖRK BORG</strong> за прості правила для адаптації..</p>
+            <h3 class="text-2xl mt-8 mb-3">6.3. Фінальне слово</h3>
+            <p class="mb-4">Грайте чесно. Брешіть багато. Створюйте власні історії. Смійтеся з жахливого і плачте від смішного. Це ваша п'єса.</p>
+            <blockquote class="p-4 my-6 text-xl italic text-center">І пам'ятайте: виходу немає. Але є ларьок за рогом. Можливо, він ще працює.</blockquote>
+            <p class="text-center text-yellow-400 font-bold text-2xl my-8">Кінець п'єси.<br>Завіса.</p>
+        </section>
+
+        <section id="arkush-section" x-show="activeTab === 'rozdil-7'" x-cloak>
+            <h2 class="text-4xl font-bold mb-6 border-b-2 border-gray-700 pb-2">РОЗДІЛ 7: ЛИСТ ПЕРСОНАЖА</h2>
+            <p class="mb-6 text-gray-400">Заповнюй прямо тут або роздрукуй. Це твій документ, твоя доля, твоя епітафія.</p>
+            <div id="arkush-personazha-wrapper">
+                <div x-data="{ oz: Array(20).fill(false), ozb: Array(20).fill(false), toggleTracker(tracker, index) { this[tracker][index] = !this[tracker][index]; } }">
+                    <div class="text-center border-b-4 border-black pb-2 mb-4">
+                        <h3 class="text-3xl arkush-header">АРКУШ ОБЛІКУ</h3>
+                        <p class="text-sm font-bold">Особова справа № <input type="text" class="w-20 text-center !border-dotted !inline-block"></p>
+                    </div>
+                    <div class="grid grid-cols-6 gap-4 mb-4">
+                        <div class="col-span-6 md:col-span-3"><label for="char-name">ІМ'Я / ПОГОНЯЛО</label><input type="text" id="char-name"></div>
+                        <div class="col-span-6 md:col-span-3"><label for="char-archetype">АРХЕТИП (ХТО ПО ЖИЗНІ)</label><input type="text" id="char-archetype"></div>
+                        <div class="col-span-6"><label for="char-tragedy">ТРАГЕДІЯ (ЩО РУХАЄ ВПЕРЕД)</label><input type="text" id="char-tragedy"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        <div><h4 class="text-center font-bold arkush-header mb-2">ЗДОРОВ'Я (ОЗ)</h4><div class="tracker-grid"><template x-for="(box, index) in oz" :key="index"><div @click="toggleTracker('oz', index)" class="tracker-box" :class="{ 'ticked': box }"></div></template></div></div>
+                        <div><h4 class="text-center font-bold arkush-header mb-2">ЗАЙОБАНІСТЬ (ОЗБ)</h4><div class="tracker-grid"><template x-for="(box, index) in ozb" :key="index"><div @click="toggleTracker('ozb', index)" class="tracker-box" :class="{ 'ticked': box }"></div></template></div></div>
+                    </div>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center border-y-2 border-black py-4 mb-4">
+                        <div><label for="stat-str">СИЛА</label><input type="number" id="stat-str" class="text-center text-3xl"></div>
+                        <div><label for="stat-dex">СПРИТНІСТЬ</label><input type="number" id="stat-dex" class="text-center text-3xl"></div>
+                        <div><label for="stat-con">ВИТРИВАЛІСТЬ</label><input type="number" id="stat-con" class="text-center text-3xl"></div>
+                        <div><label for="stat-cha">ХАРИЗМА</label><input type="number" id="stat-cha" class="text-center text-3xl"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div><label for="char-gear">ШМУРДЯК / ЗБРОЯ / БРОНЯ</label><textarea id="char-gear" rows="8"></textarea></div>
+                        <div><label for="char-contacts">БОРГИ / ЗВ'ЯЗКИ / ВОРОГИ</label><textarea id="char-contacts" rows="8"></textarea></div>
+                        <div class="md:col-span-2"><label for="char-notes">НАСЛІДКИ, КАЛІЦТВА ТА ІНШИЙ ПІЗДЄЦЬ</label><textarea id="char-notes" rows="4"></textarea></div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-6 print-button-wrapper"><button onclick="window.print()" class="print-button">ДРУКУВАТИ АРКУШ</button></div>
+        </section>
+
+        </main>
+    </div>
+</body>
+</html>
